@@ -1,7 +1,7 @@
 import 'package:chucker_flutter/src/helpers/extensions.dart';
 import 'package:chucker_flutter/src/helpers/shared_preferences_manager.dart';
 import 'package:chucker_flutter/src/localization/localization.dart';
-
+import 'package:chucker_flutter/src/helpers/notification_service.dart';
 import 'package:chucker_flutter/src/models/settings.dart';
 import 'package:chucker_flutter/src/view/chucker_page.dart';
 import 'package:chucker_flutter/src/view/helper/chucker_button.dart';
@@ -60,10 +60,20 @@ ChuckerFlutter: You programmatically vetoed notification behavior. Make sure to 
       return false;
     }
 
+    // Show both in-app overlay and system notification
     final overlay = ChuckerFlutter.navigatorObserver.navigator!.overlay;
     final entry = _createOverlayEntry(method, statusCode, path, requestTime);
     _overlayEntries.add(entry);
     overlay?.insert(entry);
+
+    // Show system notification
+    ChuckerFlutter._notificationService.showNotification(
+      title: '$method Request: $path',
+      body: 'Status Code: $statusCode',
+      method: method,
+      statusCode: statusCode,
+    );
+
     notificationShown = true;
     return true;
   }
@@ -147,6 +157,12 @@ class ChuckerFlutter {
   ///[showNotification] decides whether to show in app notification or not
   ///By default its value is `true`
   static bool showNotification = true;
+
+  static final _notificationService = ChuckerNotificationService();
+
+  static Future<void> initialize() async {
+    await _notificationService.initialize();
+  }
 
   ///[ChuckerButton] can be placed anywhere in the UI to open Chucker Screen
   static final chuckerButton = isDebugMode || ChuckerFlutter.showOnRelease
