@@ -6,8 +6,6 @@ import 'package:chucker_flutter/src/models/settings.dart';
 import 'package:chucker_flutter/src/view/chucker_page.dart';
 import 'package:chucker_flutter/src/view/helper/chucker_button.dart';
 import 'package:chucker_flutter/src/view/helper/colors.dart';
-import 'package:chucker_flutter/src/view/widgets/notification.dart'
-    as notification;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
