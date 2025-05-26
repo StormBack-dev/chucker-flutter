@@ -25,7 +25,7 @@ class ChuckerNotificationService {
     await _notificationsPlugin.initialize(
       settings,
       onDidReceiveNotificationResponse: (NotificationResponse details) {
-        // Handle notification tap
+        // Don't remove notification on tap, just show the screen
         ChuckerFlutter.showChuckerScreen();
       },
     );
@@ -37,21 +37,25 @@ class ChuckerNotificationService {
     required String method,
     required int statusCode,
   }) async {
-    const androidDetails = AndroidNotificationDetails(
+    final androidDetails = AndroidNotificationDetails(
       'chucker_channel_id',
       'Chucker Notifications',
       channelDescription: 'Shows HTTP request notifications',
       importance: Importance.high,
       priority: Priority.high,
+      autoCancel: false, // Prevent auto-cancellation
+      ongoing: true, // Make notification persistent
+      onlyAlertOnce: false, // Alert on every notification
     );
 
     const iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
+      interruptionLevel: InterruptionLevel.active, // Make notification more prominent
     );
 
-    const details = NotificationDetails(
+    final details = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
