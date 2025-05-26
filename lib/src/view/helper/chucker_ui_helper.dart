@@ -17,8 +17,6 @@ import 'package:flutter/material.dart';
 ///of your application as it is required to show notification and the screens
 ///of `chucker_flutter`
 class ChuckerUiHelper {
-  static final List<OverlayEntry?> _overlayEntries = List.empty(growable: true);
-
   ///Only for testing
   static bool notificationShown = false;
 
@@ -60,13 +58,7 @@ ChuckerFlutter: You programmatically vetoed notification behavior. Make sure to 
       return false;
     }
 
-    // Show both in-app overlay and system notification
-    final overlay = ChuckerFlutter.navigatorObserver.navigator!.overlay;
-    final entry = _createOverlayEntry(method, statusCode, path, requestTime);
-    _overlayEntries.add(entry);
-    overlay?.insert(entry);
-
-    // Show system notification
+    // Show only system notification via flutter_local_notifications
     ChuckerFlutter._notificationService.showNotification(
       title: '$method Request: $path',
       body: 'Status Code: $statusCode',
@@ -76,37 +68,6 @@ ChuckerFlutter: You programmatically vetoed notification behavior. Make sure to 
 
     notificationShown = true;
     return true;
-  }
-
-  static OverlayEntry _createOverlayEntry(
-    String method,
-    int statusCode,
-    String path,
-    DateTime requestTime,
-  ) {
-    return OverlayEntry(
-      builder: (context) {
-        return Align(
-          alignment: settings.notificationAlignment,
-          child: notification.Notification(
-            statusCode: statusCode,
-            method: method,
-            path: path,
-            removeNotification: _removeNotification,
-            requestTime: requestTime,
-          ),
-        );
-      },
-    );
-  }
-
-  static void _removeNotification() {
-    for (final entry in _overlayEntries) {
-      if (entry != null) {
-        entry.remove();
-      }
-    }
-    _overlayEntries.clear();
   }
 
   ///[showChuckerScreen] shows the screen containing the list of recored
