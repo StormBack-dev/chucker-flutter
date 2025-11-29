@@ -101,6 +101,9 @@ ChuckerFlutter: You programmatically vetoed notification behavior. Make sure to 
 ///
 ///[chuckerButton] and notifications only be visible in debug mode
 class ChuckerFlutter {
+  ///Prevents instantiation; every member on this type is static.
+  const ChuckerFlutter._();
+
   ///[navigatorObserver] observes the navigation of your app. It must be
   ///referenced in your MaterialApp widget
   static final navigatorObserver = NavigatorObserver();
@@ -124,7 +127,7 @@ class ChuckerFlutter {
   }
 
   ///[ChuckerButton] can be placed anywhere in the UI to open Chucker Screen
-  static final chuckerButton = isDebugMode || ChuckerFlutter.showOnRelease
+  static final chuckerButton = (isDebugMode || ChuckerFlutter.showOnRelease)
       ? ChuckerButton.getInstance()
       : const SizedBox.shrink();
 
